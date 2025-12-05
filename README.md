@@ -40,3 +40,5 @@ chmod 777 /path/to/outdir
 (only if you understand the security implications)
 
 I verified these three options by running them in bash, once I tried all three of these options, my xpclr analysis was able to work.
+
+
