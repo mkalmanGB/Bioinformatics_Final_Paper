@@ -130,3 +130,52 @@ for CHR in $(bcftools view -h your.vcf.gz | grep "^##contig" | cut -f1 -d"," | s
           --out xpclr.$CHR.txt
 done
 I was unable to verify this ouput, as my labmate pointed out that there is an easier solution where you did not have to list every chromosome in your file. I ended up using a bash script that stored all of the information into a variable, which saved a lot time.
+
+I used ChatGPT to generate a code that determined which chromosomes had the highest FST values.
+Prompt: How do you find the number of rows in a table contain a value greater than or equal to 0.90 using the programming language R?
+ChatGPT output: Here are the most common and simple ways to count how many rows contain a value ≥ 0.90 in R.
+
+✅ If you want to check a single column
+
+Example column: score
+
+sum(df$score >= 0.90)
+
+
+This returns the number of rows where the value is ≥ 0.90.
+
+✅ If you want to count rows where any column is ≥ 0.90
+sum(apply(df, 1, function(x) any(x >= 0.90)))
+
+My follow-up prompt: I copy and pasted a small portion of my Fst data set for one of my species, allowing ChatGPT to know what the headers were in the data set.
+ChatGPT output: Great — with this data structure, you can easily count how many rows have WEIGHTED_FST ≥ 0.90 or MEAN_FST ≥ 0.90.
+
+Below are the exact R commands you need.
+✅ 1. Count rows where WEIGHTED_FST ≥ 0.90
+sum(df$WEIGHTED_FST >= 0.90)
+
+✅ 2. Count rows where MEAN_FST ≥ 0.90
+sum(df$MEAN_FST >= 0.90)
+My second follow-up prompt: How would I count how many rows a specific chromosome has that contain WEIGHTED_FST ≥ 0.90?
+ChatGPT output: Here is the cleanest way to do it in R.
+
+✅ Count how many rows a specific chromosome has with WEIGHTED_FST ≥ 0.90
+
+Assume your chromosome column is called CHROM.
+
+Replace "scaffold-ma1" with the chromosome you want.
+
+sum(df$CHROM == "scaffold-ma1" & df$WEIGHTED_FST >= 0.90)
+
+
+This returns the number of rows from that chromosome only where WEIGHTED_FST ≥ 0.90.
+
+✅ If you want to do this for many chromosomes at once
+
+This gives a count per chromosome:
+
+aggregate(WEIGHTED_FST >= 0.90 ~ CHROM, data = df, sum)
+
+I verified the code by using it, while modifying it for my specific files. I was able to derive the answers using the code provided ChatGPT.
+To find similar values for Pi and Tajima's D, I simply needed to modify the code to read the appropriate file and hand the correct inequality.
+
